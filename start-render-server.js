@@ -7,7 +7,7 @@ const os = require('os');
 class EnhancedRenderServer {
   constructor() {
     this.signalingServerUrl = process.env.SIGNALING_SERVER || 'http://localhost:3000';
-    this.targetWebUrl = process.env.TARGET_URL || 'http://192.168.1.100:8080';
+    this.targetWebUrl = process.env.TARGET_URL || 'http://10.144.144.9:8080';
     this.socket = null;
     this.browser = null;
     this.page = null;
