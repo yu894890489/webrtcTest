@@ -29,20 +29,47 @@ class WebRTCClient {
     }
 
     bindEvents() {
+        // 获取所有需要的元素
+        const serverSelect = document.getElementById('serverSelect');
+        const connectBtn = document.getElementById('connectBtn');
+        const disconnectBtn = document.getElementById('disconnectBtn');
+        const qualitySelect = document.getElementById('qualitySelect');
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
+
         // 服务器选择
-        document.getElementById('serverSelect').addEventListener('change', (e) => {
-            this.selectServer(e.target.value);
-        });
+        if (serverSelect) {
+            serverSelect.addEventListener('change', (e) => {
+                this.selectServer(e.target.value);
+            });
+        }
 
         // 连接按钮
-        document.getElementById('connectBtn').addEventListener('click', () => {
-            this.connectToRenderServer();
-        });
+        if (connectBtn) {
+            connectBtn.addEventListener('click', () => {
+                this.connectToRenderServer();
+            });
+        }
 
         // 断开连接按钮
-        document.getElementById('disconnectBtn').addEventListener('click', () => {
-            this.disconnect();
-        });
+        if (disconnectBtn) {
+            disconnectBtn.addEventListener('click', () => {
+                this.disconnect();
+            });
+        }
+        
+        // 画质控制
+        if (qualitySelect) {
+            qualitySelect.addEventListener('change', (e) => {
+                this.updateQuality(e.target.value);
+            });
+        }
+        
+        // 全屏切换
+        if (fullscreenBtn) {
+            fullscreenBtn.addEventListener('click', () => {
+                this.toggleFullscreen();
+            });
+        }
         
         // 视频交互事件
         if (this.videoElement) {
@@ -71,16 +98,6 @@ class WebRTCClient {
                 this.sendInteraction('keypress', { key: e.key });
             }
         });
-        
-        // 画质控制
-        document.getElementById('qualitySelect').addEventListener('change', (e) => {
-            this.updateQuality(e.target.value);
-        });
-        
-        // 全屏切换
-        document.getElementById('fullscreenBtn').addEventListener('click', () => {
-            this.toggleFullscreen();
-        });
     }
 
     connectToServer() {
@@ -108,7 +125,11 @@ class WebRTCClient {
         this.socket.on('connection-established', (data) => {
             console.log('连接已建立:', data);
             this.updateConnectionStatus('连接已建立', 'streaming');
-            document.getElementById('disconnectBtn').style.display = 'inline-block';
+            
+            const disconnectBtn = document.getElementById('disconnectBtn');
+            if (disconnectBtn) {
+                disconnectBtn.style.display = 'inline-block';
+            }
         });
 
         this.socket.on('error', (error) => {
@@ -123,6 +144,8 @@ class WebRTCClient {
 
     updateServerList(servers) {
         const select = document.getElementById('serverSelect');
+        if (!select) return;
+        
         select.innerHTML = '<option value="">选择渲染服务器...</option>';
         
         servers.forEach(server => {
@@ -132,14 +155,18 @@ class WebRTCClient {
             select.appendChild(option);
         });
         
-        if (servers.length > 0) {
-            document.getElementById('connectBtn').disabled = false;
+        const connectBtn = document.getElementById('connectBtn');
+        if (connectBtn && servers.length > 0) {
+            connectBtn.disabled = false;
         }
     }
 
     selectServer(serverId) {
         this.currentServer = serverId;
-        document.getElementById('connectBtn').disabled = !serverId;
+        const connectBtn = document.getElementById('connectBtn');
+        if (connectBtn) {
+            connectBtn.disabled = !serverId;
+        }
     }
 
     connectToRenderServer() {
@@ -220,7 +247,11 @@ class WebRTCClient {
         }
         
         this.updateConnectionStatus('已断开连接', 'disconnected');
-        document.getElementById('disconnectBtn').style.display = 'none';
+        
+        const disconnectBtn = document.getElementById('disconnectBtn');
+        if (disconnectBtn) {
+            disconnectBtn.style.display = 'none';
+        }
         
         if (this.videoElement) {
             this.videoElement.style.display = 'none';
@@ -233,8 +264,17 @@ class WebRTCClient {
 
     updateConnectionStatus(message, status) {
         const statusEl = document.getElementById('connectionStatus');
-        statusEl.textContent = message;
-        statusEl.className = `status ${status}`;
+        if (statusEl) {
+            statusEl.textContent = message;
+            statusEl.className = `status ${status}`;
+        }
+        
+        // 同时更新状态指示器
+        const indicator = document.getElementById('statusIndicator');
+        if (indicator) {
+            indicator.className = status === 'connected' || status === 'streaming' ? 
+                'status-indicator connected' : 'status-indicator';
+        }
     }
 
     updateStats(frameSize) {

@@ -86,6 +86,10 @@
             font-weight: 400;
         }
 
+        .server-controls {
+            margin-bottom: 10px;
+        }
+
         .server-list {
             display: flex;
             gap: 15px;
@@ -243,13 +247,18 @@
         <h1>WebRTC远程渲染客户端</h1>
         <div class="status">
             <div class="status-indicator" id="statusIndicator"></div>
-            <span class="status-text" id="statusText">未连接</span>
+            <span class="status-text" id="connectionStatus">未连接</span>
         </div>
     </div>
 
     <div class="main-content">
         <div class="server-selection" id="serverSelection">
             <h3>选择渲染服务器</h3>
+            <div class="server-controls">
+                <select id="serverSelect" class="quality-select" style="width: 300px; margin-bottom: 10px;">
+                    <option value="">正在加载服务器...</option>
+                </select>
+            </div>
             <div class="server-list" id="serverList">
                 <div class="server-card">
                     <div class="server-name">正在搜索服务器...</div>
@@ -257,10 +266,12 @@
                 </div>
             </div>
             <button class="connect-btn" id="connectBtn" disabled>连接到渲染服务器</button>
+            <button class="connect-btn" id="disconnectBtn" style="display: none; background: #e74c3c; margin-left: 10px;">断开连接</button>
         </div>
 
         <div class="video-container" id="videoContainer">
-            <video id="remoteVideo" autoplay playsinline></video>
+            <img id="videoStream" style="width: 100%; height: 100%; object-fit: contain; border-radius: 8px; cursor: crosshair; display: none;" />
+            <video id="remoteVideo" autoplay playsinline style="display: none;"></video>
             <div class="loading-overlay" id="loadingOverlay">
                 <div class="loading-spinner"></div>
                 <div>正在连接渲染服务器...</div>
@@ -275,9 +286,11 @@
                     <option value="medium" selected>中画质</option>
                     <option value="low">低画质</option>
                 </select>
+                <button class="connect-btn" id="fullscreenBtn" style="margin-left: 10px; padding: 8px 16px; font-size: 14px;">全屏</button>
             </div>
-            <div class="stats" id="stats">
-                延迟: 0ms | 帧率: 0fps | 带宽: 0kbps
+            <div class="stats" id="performanceStats">
+                <div>帧率: 0 FPS</div>
+                <div>数据接收: 0 MB</div>
             </div>
         </div>
     </div>
