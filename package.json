@@ -1,0 +1,25 @@
+{
+  "name": "webrtc-remote-rendering",
+  "version": "1.0.0",
+  "description": "WebRTC远程渲染解决方案",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "render-server": "node render-server/index.js",
+    "render-server-enhanced": "node start-render-server.js",
+    "client": "node client/index.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "socket.io": "^4.7.2",
+    "socket.io-client": "^4.7.2",
+    "puppeteer": "^21.1.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "keywords": ["webrtc", "remote-rendering", "gpu-acceleration"],
+  "author": "Your Name",
+  "license": "MIT"
+} 
